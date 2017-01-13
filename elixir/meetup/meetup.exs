@@ -17,12 +17,38 @@ defmodule Meetup do
   """
 
   @spec meetup(pos_integer, pos_integer, weekday, schedule) :: :calendar.date
-  def meetup(year, month, weekday, :teenth), do: meetup(year, month, weekday, 13..19)
+  def meetup(year, month, weekday, :teenth) do
+    meetup(year, month, weekday, 13..19)
+  end
+
+  def meetup(year, month, weekday, :first) do
+    meetup(year, month, weekday, 1..7)
+  end
+
+  def meetup(year, month, weekday, :second) do
+    meetup(year, month, weekday, 8..14)
+  end
+  
+  def meetup(year, month, weekday, :third) do
+    meetup(year, month, weekday, 15..21)
+  end
+
+  def meetup(year, month, weekday, :fourth) do
+    meetup(year, month, weekday, 22..28)
+  end
+
+  def meetup(year, month, weekday, :last) do
+    last_day = Date.new(year, month, 1) |> elem(1) |> Date.days_in_month
+    meetup(year, month, weekday, (last_day - 6)..last_day)
+  end
+    
   def meetup(year, month, weekday, range) do
     range
     |> Enum.to_list
     |> Enum.map(&(Date.new(year, month, &1)))
-    |> Enum.find(fn({_, date}) -> valid?(date, weekday) end)
+    |> Enum.find(fn({:ok, date}) -> valid?(date, weekday) end)
+    |> elem(1)
+    |> Date.to_erl
   end
 
   def valid?(date, :monday),    do: Date.day_of_week(date) === 1
