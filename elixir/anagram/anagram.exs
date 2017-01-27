@@ -4,10 +4,10 @@ defmodule Anagram do
   """
   @spec match(String.t, [String.t]) :: [String.t]
   def match(base, candidates) do
-    candidates 
-    |> remove_duplicates(base) 
+    candidates
+    |> remove_duplicates(base)
     |> check_length(base)
-    |> Enum.filter(fn(word) -> 
+    |> Enum.filter(fn(word) ->
       match_letters(String.to_charlist(base), String.to_charlist(word)) end)
   end
 
@@ -27,7 +27,7 @@ defmodule Anagram do
 
   def check_length([first | rest], base) do
     cond do
-      String.length(first) == String.length(base) -> 
+      String.length(first) == String.length(base) ->
         [ first | check_length(rest, base) ]
       true ->
         check_length(rest, base)
